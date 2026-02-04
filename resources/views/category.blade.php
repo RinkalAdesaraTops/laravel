@@ -12,7 +12,12 @@
 <body>
     <div class="container mt-5">
         <h4>Category Page</h4>
-        <form action="{{ $editdata ? route('category.update',$editdata->id) : route('category.store') }}" method="post">
+        @if (session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
+        <form action="{{ $editdata ? route('category.update',$editdata->id) : route('category.store') }}" method="post" enctype="multipart/form-data">
             @csrf
             @if($editdata)
             @method('PUT')
@@ -20,10 +25,16 @@
             <input type="hidden" name="catid" id="catid" value="{{ $editdata ? $editdata->id : '' }}">
             <div class="form-group">
                 <label for="catname">Category</label>
-                <input type="text" name="catname" id="catname" class="form-control" value="{{ $editdata ? $editdata->catname : '' }}">
+                <input type="text" name="catname" id="catname" class="form-control"
+                    value="{{ $editdata ? $editdata->catname : '' }}">
                 @error('catname')
-                    <div class="alert alert-danger">{{ $message }}</div>
+                <div class="alert alert-danger">{{ $message }}</div>
                 @enderror
+            </div>
+            <div class="form-group">
+                <label for="catimg">Category Image</label>
+                <input type="file" name="image" id="image" class="form-control-file">
+
             </div>
             <button type="submit" class="btn btn-primary">Save</button>
         </form>
@@ -33,6 +44,7 @@
             <thead class="thead-light">
                 <tr>
                     <th>Id</th>
+                    <th>Image</th>
                     <th>Category</th>
                     <th>Action</th>
                 </tr>
@@ -41,12 +53,13 @@
                 @foreach ($catdata as $cat)
                 <tr>
                     <td>{{ $cat->id }}</td>
+                    <td><img src="{{ asset('catimages/'.$cat->image) }}" width="100" height="100"></td>
                     <td>{{ $cat->catname }}</td>
                     <td>
                         <form action="{{ route('category.edit',$cat->id) }}" method="post" style="display:inline;">
                             @csrf
                             @method('PATCH')
-                        <button type="submit" class="btn btn-warning btn-sm">Edit</button>
+                            <button type="submit" class="btn btn-warning btn-sm">Edit</button>
                         </form>
                         <form action="{{ route('category.destroy',$cat->id) }}" method="post" style="display:inline;">
                             @csrf
