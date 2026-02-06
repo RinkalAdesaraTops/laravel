@@ -8,33 +8,33 @@ use Illuminate\Http\Request;
 
 class category extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         $categories = \App\Models\category::get();
         $editdata = '';
-        return view('category',[
-        'editdata'=>$editdata,    
-        'catdata'=> $categories]);
+        return view('category', [
+            'editdata' => $editdata,
+            'catdata' => $categories
+        ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        $data = \App\Models\category::create(['catname'=>$request->catname]);
-        return redirect('/category');
+        $request->validate([
+            'catname' => 'required|min:3',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif',
+        ], [
+            'catname.required' => 'Please enter category',
+            'catname.min' => 'Atleast 3 character should be enter'
+        ]);
+        //img name generate
+        $imgName = "img" . time() . "." . $request->image->extension();
+        $request->image->move(public_path("catimages"), $imgName);
+        $data = \App\Models\category::create([
+            'catname' => $request->catname,
+            'image' => $imgName
+        ]);
+        return redirect('/category')->with('success', 'Category save successfully');
     }
 
     /**
@@ -52,29 +52,39 @@ class category extends Controller
     {
         $categories = \App\Models\category::get();
         $data = \App\Models\category::find($id);
-        return view('category',[
-            'editdata'=> $data,
-            'catdata'=> $categories
-            ]);
+        return view('category', [
+            'editdata' => $data,
+            'catdata' => $categories
+        ]);
     }
-
     /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, string $id)
     {
         $data = \App\Models\category::findOrFail($id);
-        $data->update(['catname'=>$request->catname]);
-        return redirect('/category');
+        $img = $data->image;
+        if ($request->image != null) {
+            if (file_exists(public_path('catimages/' . $img))) {
+                unlink(public_path('catimages/' . $img));
+            }
+            $imgName = "img" . time() . "." . $request->image->extension();
+                $request->image->move(public_path("catimages"), $imgName);
+            $img = $imgName;
+        }
+        $data->update([
+            'catname' => $request->catname,
+            'image' => $img
+        ]);
+        return redirect('/category')->with('success', value: 'Category update successfully');
     }
-
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
         $data = \App\Models\category::findOrFail($id);
+        if (file_exists(public_path('catimages/' . $data->image))) {
+            unlink(public_path('catimages/' . $data->image));
+        }
         $data->delete();
-        return redirect('/category');
+        return redirect('/category')->with('success', value: 'Category delete successfully');
     }
 }

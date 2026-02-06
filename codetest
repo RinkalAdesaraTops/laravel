@@ -1,0 +1,73 @@
+Schema::create('subcategories', function (Blueprint $table) {
+    $table->id();
+    $table->unsignedBigInteger('cat_id');
+    $table->string('name');
+    $table->timestamps();
+
+    $table->foreign('cat_id')
+          ->references('id')
+          ->on('categories')
+          ->onDelete('cascade');
+});
+
+CatModel
+class Category extends Model
+{
+    public function subcategories()
+    {
+        return $this->hasMany(Subcategory::class, 'cat_id');
+    }
+}
+Subcatmodel
+class Subcategory extends Model
+{
+    public function category()
+    {
+        return $this->belongsTo(Category::class,'cat_id');
+    }
+}
+Get category from a subcategory
+$subcategory = Subcategory::find(1);
+$category = $subcategory->category;
+
+
+------------------------------------------
+Ajax Crud
+public function store(Request $request)
+    {
+        $request->validate([
+            'name' => 'required'
+        ]);
+
+        $category = Category::create($request->all());
+
+        return response()->json($category);
+    }
+
+    $('#addCategory').submit(function(e){
+    e.preventDefault();
+
+    let id = $('#cat_id').val();
+
+    let url = id ? '/categories/' + id : '/categories';
+    let type = id ? 'PUT' : 'POST';
+
+    $.ajax({
+        type: type,
+        url: url,
+        data: {
+            name: $('#name').val()
+        },
+        success: function(response){
+            $('#row_' + response.id).html(`
+                <td>${response.name}</td>
+                <td>
+                    <button onclick="editCategory(${response.id})">Edit</button>
+                    <button onclick="deleteCategory(${response.id})">Delete</button>
+                </td>
+            `);
+            $('#name').val('');
+            $('#cat_id').remove();
+        }
+    });
+});

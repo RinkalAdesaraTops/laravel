@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class category extends Model
 {
-    protected $fillable = ['catname'];
+    protected $fillable = ['catname','image'];
 }

@@ -1,8 +1,7 @@
 <?php
-
 use App\Http\Controllers\category;
+use App\Http\Controllers\Subcategorycontroller;
 use Illuminate\Support\Facades\Route;
-
 Route::get('/', function () {
     return view('welcome');
 });
@@ -16,16 +15,16 @@ Route::get('/contact',function(){
     return view('contact');
 });
 Route::get('/form',function(){
-    
     return view('form');
 });
-// Route::post('/form',[category::class,'store']);
-// Route::get('category/disp',category::disp());
 Route::get('/category',[category::class,'index']);
 Route::post('/category/store',[category::class,'store'])->name('category.store');
 Route::delete('category/{id}', [category::class,'destroy'])->name('category.destroy');
 Route::patch('category/{id}', [category::class,'edit'])->name('category.edit');
 Route::put('category/update/{id}', [category::class,'update'])->name('category.update');
-// Route::resource('category',category::class);
 
-
+Route::get('/subcategory',[Subcategorycontroller::class,'index']);
+Route::post('/subcategory/store',[Subcategorycontroller::class,'store'])->name('subcategory.store');
+Route::delete('subcategory/{id}', [Subcategorycontroller::class,'destroy'])->name('subcategory.destroy');
+Route::patch('subcategory/{id}', [Subcategorycontroller::class,'edit'])->name('subcategory.edit');
+Route::put('subcategory/update/{id}', [Subcategorycontroller::class,'update'])->name('subcategory.update');
