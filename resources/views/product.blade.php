@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="csrf-token">
     <title>Category Management</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
@@ -17,15 +18,15 @@
                 {{ session('success') }}
             </div>
         @endif
-        <form action="{{ $editdata ? route('subcategory.update',$editdata->id) : route('subcategory.store') }}" method="post" enctype="multipart/form-data">
+        <form action="{{ $editdata ? route('product.update',$editdata->id) : route('product.store') }}" method="post" enctype="multipart/form-data">
             @csrf
             @if($editdata)
             @method('PUT')
             @endif
-            <input type="hidden" name="subcatid" id="subcatid" value="{{ $editdata ? $editdata->id : '' }}">
+            <input type="hidden" name="productid" id="productid" value="{{ $editdata ? $editdata->id : '' }}">
             <div class="form-group">
                 <label>Category</label>
-                <select name="cat_id" id="cat_id" class="form-control">
+                <select name="cat_id" id="cat_id" class="form-control" onchange="getSubcatData()">
                     <option value="">--Select Category--</option>
                     @foreach ($catdata as $cat)
                         <option value={{ $cat->id }} {{ $editdata && $editdata->cat_id ==$cat->id ?'selected':'' }}>{{ $cat->catname }}</option>
@@ -33,7 +34,14 @@
                 </select>
             </div>
             <div class="form-group">
-                <label for="subcatname">Subcategory</label>
+                <label>Subcategory</label>
+                <select name="subcat_id" id="subcat_id" class="form-control">
+                    <option value="">--Select Subcategory--</option>
+                    
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="subcatname">product</label>
                 <input type="text" name="subcatname" id="subcatname" class="form-control"
                     value="{{ $editdata ? $editdata->subcatname : '' }}">
                 @error('subcatname')
@@ -45,12 +53,12 @@
         </form>
         <br><br>
         <table class="table table-bordered">
-            <caption>Subcategory List</caption>
+            <caption>product List</caption>
             <thead class="thead-light">
                 <tr>
                     <th>Id</th>
                     <th>Category</th>
-                    <th>Subcategory</th>
+                    <th>product</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -61,12 +69,12 @@
                     <td>{{ $subcat->category->catname }}</td>
                     <td>{{ $subcat->subcatname }}</td>
                     <td>
-                        <form action="{{ route('subcategory.edit',$subcat->id) }}" method="post" style="display:inline;">
+                        <form action="{{ route('product.edit',$subcat->id) }}" method="post" style="display:inline;">
                             @csrf
                             @method('PATCH')
                             <button type="submit" class="btn btn-warning btn-sm">Edit</button>
                         </form>
-                        <form action="{{ route('subcategory.destroy',$subcat->id) }}" method="post" style="display:inline;">
+                        <form action="{{ route('product.destroy',$subcat->id) }}" method="post" style="display:inline;">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn btn-danger btn-sm">Delete</button>
@@ -80,6 +88,35 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn-script.com/ajax/libs/jquery/3.7.1/jquery.min.js" type="text/javascript"></script>
+    <script>
+       function getSubcatData(){
+        let catid = $('#cat_id').val()
+
+        $.ajaxSetup({
+    headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+});
+         $.ajax({
+            url:"/getSubcat",
+            method:"post",
+            data:{"cat_id":cat_id,
+                _token: $('meta[name="csrf-token"]').attr('content')
+            },
+            
+            success:function(data){
+                console.log('hi');
+                
+            },
+            error:function(err){
+                console.log(err);
+                
+            }
+        })
+       }
+    </script>
 </body>
+
 
 </html>

@@ -61,7 +61,15 @@ class Subcategorycontroller extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $subcategory = Subcategory::findOrFail($id);
+        $categories = \App\Models\category::get();
+        $subcat = Subcategory::get();
+        $editdata = '';
+        return view('subcategory', [
+            'editdata' => $subcategory,
+            'catdata' => $categories,
+            'subcatdata'=>$subcat
+        ]);
     }
 
     /**
@@ -69,7 +77,13 @@ class Subcategorycontroller extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $res = Subcategory::findOrFail($id);
+        $res->update([
+            'cat_id'=>$request->cat_id,
+            'subcatname'=>$request->subcatname,
+        ]);
+        return redirect('/subcategory')->with('success', 'Subcategory update successfully');
+
     }
 
     /**
@@ -77,6 +91,9 @@ class Subcategorycontroller extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $res = Subcategory::findOrFail($id);
+        $res->delete();
+        return redirect('/subcategory')->with('success', 'Subcategory deleted successfully');
+
     }
 }
