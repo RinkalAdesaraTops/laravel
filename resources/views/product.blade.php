@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <meta name="csrf-token">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Category Management</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
@@ -14,11 +14,12 @@
     <div class="container mt-5">
         <h4>Category Page</h4>
         @if (session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
-            </div>
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
         @endif
-        <form action="{{ $editdata ? route('product.update',$editdata->id) : route('product.store') }}" method="post" enctype="multipart/form-data">
+        <form action="{{ $editdata ? route('product.update',$editdata->id) : route('product.store') }}" method="post"
+            enctype="multipart/form-data">
             @csrf
             @if($editdata)
             @method('PUT')
@@ -26,10 +27,11 @@
             <input type="hidden" name="productid" id="productid" value="{{ $editdata ? $editdata->id : '' }}">
             <div class="form-group">
                 <label>Category</label>
-                <select name="cat_id" id="cat_id" class="form-control" onchange="getSubcatData()">
+                <select name="cat_id" id="cat_id" class="form-control">
                     <option value="">--Select Category--</option>
                     @foreach ($catdata as $cat)
-                        <option value={{ $cat->id }} {{ $editdata && $editdata->cat_id ==$cat->id ?'selected':'' }}>{{ $cat->catname }}</option>
+                    <option value={{ $cat->id }} {{ $editdata && $editdata->cat_id ==$cat->id ?'selected':'' }}>{{
+                        $cat->catname }}</option>
                     @endforeach
                 </select>
             </div>
@@ -37,18 +39,26 @@
                 <label>Subcategory</label>
                 <select name="subcat_id" id="subcat_id" class="form-control">
                     <option value="">--Select Subcategory--</option>
-                    
+
                 </select>
             </div>
             <div class="form-group">
-                <label for="subcatname">product</label>
-                <input type="text" name="subcatname" id="subcatname" class="form-control"
-                    value="{{ $editdata ? $editdata->subcatname : '' }}">
-                @error('subcatname')
+                <label for="subcatname">Product</label>
+                <input type="text" name="name" id="name" class="form-control"
+                    value="{{ $editdata ? $editdata->name : '' }}">
+                @error('name')
                 <div class="alert alert-danger">{{ $message }}</div>
                 @enderror
             </div>
-            
+            <div class="form-group">
+                <label for="price">Price</label>
+                <input type="number" name="price" id="price" class="form-control"
+                    value="{{ $editdata ? $editdata->price : '' }}">
+                @error('price')
+                <div class="alert alert-danger">{{ $message }}</div>
+                @enderror
+            </div>
+
             <button type="submit" class="btn btn-primary">Save</button>
         </form>
         <br><br>
@@ -85,36 +95,44 @@
             </tbody>
         </table>
     </div>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn-script.com/ajax/libs/jquery/3.7.1/jquery.min.js" type="text/javascript"></script>
+    {{-- <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script> --}}
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src="https://cdn-script.com/ajax/libs/jquery/3.7.1/jquery.min.js" type="text/javascript"></script>
+    
     <script>
-       function getSubcatData(){
+        $(document).ready(function(){
+        $("#cat_id").on('change',function(){
         let catid = $('#cat_id').val()
 
         $.ajaxSetup({
-    headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    }
-});
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
          $.ajax({
             url:"/getSubcat",
             method:"post",
-            data:{"cat_id":cat_id,
+            data:{"cat_id":catid,
                 _token: $('meta[name="csrf-token"]').attr('content')
             },
-            
             success:function(data){
-                console.log('hi');
-                
+                res = "<option>Select Subcategory</option>"
+               res += data.map((i)=>{
+                    return `<option value=${i.id}>${i.subcatname}</option>`
+               })  
+               $("#subcat_id").html(res)             
             },
             error:function(err){
-                console.log(err);
-                
+                console.log(err);      
             }
         })
-       }
+            })
+        })
+    //    function getSubcatData(){
+    //     alert('hii')
+       
+    //    }
     </script>
 </body>
 

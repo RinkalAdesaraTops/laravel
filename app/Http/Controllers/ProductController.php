@@ -28,7 +28,8 @@ class ProductController extends Controller
     }
 
     public function getSubcat(Request $request){
-        dd($request->all());
+        $products =Subcategory::where('cat_id', $request->cat_id)->get();
+        return $products;
     }
     /**
      * Show the form for creating a new resource.
