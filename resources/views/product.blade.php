@@ -39,7 +39,11 @@
                 <label>Subcategory</label>
                 <select name="subcat_id" id="subcat_id" class="form-control">
                     <option value="">--Select Subcategory--</option>
-
+                    @if ($editdata)
+                        @foreach ($subcatdata as $s)
+                            <option value="{{ $s->id }}" {{ $s->id == $editdata->subcat_id ?"selected":"" }}>{{ $s->subcatname }}</option>
+                        @endforeach
+                    @endif
                 </select>
             </div>
             <div class="form-group">
@@ -68,23 +72,27 @@
                 <tr>
                     <th>Id</th>
                     <th>Category</th>
-                    <th>product</th>
+                    <th>Subcategory</th>
+                    <th>Product</th>
+                    <th>Price</th>
                     <th>Action</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach ($subcatdata as $subcat)
+                @foreach ($products as $pr)
                 <tr>
-                    <td>{{ $subcat->id }}</td>
-                    <td>{{ $subcat->category->catname }}</td>
-                    <td>{{ $subcat->subcatname }}</td>
+                    <td>{{ $pr->id }}</td>
+                    <td>{{ $pr->category->catname }}</td>
+                    <td>{{ $pr->subcategory->subcatname }}</td>
+                    <td>{{ $pr->name }}</td>
+                    <td>{{ $pr->price }}</td>
                     <td>
-                        <form action="{{ route('product.edit',$subcat->id) }}" method="post" style="display:inline;">
+                        <form action="{{ route('product.edit',$pr->id) }}" method="post" style="display:inline;">
                             @csrf
                             @method('PATCH')
                             <button type="submit" class="btn btn-warning btn-sm">Edit</button>
                         </form>
-                        <form action="{{ route('product.destroy',$subcat->id) }}" method="post" style="display:inline;">
+                        <form action="{{ route('product.destroy',$pr->id) }}" method="post" style="display:inline;">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn btn-danger btn-sm">Delete</button>
@@ -113,7 +121,8 @@
          $.ajax({
             url:"/getSubcat",
             method:"post",
-            data:{"cat_id":catid,
+            data:{
+                "cat_id":catid,
                 _token: $('meta[name="csrf-token"]').attr('content')
             },
             success:function(data){

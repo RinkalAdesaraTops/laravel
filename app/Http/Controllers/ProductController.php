@@ -44,7 +44,14 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate( [
+            'cat_id'=>'required',
+            'subcat_id'=> 'required',
+            'name'=> 'required'
+        ]);
+        $data = product::create($request->all());
+        return redirect('/product')->with('success', 'Product save successfully');
+
     }
 
     /**
@@ -60,7 +67,16 @@ class ProductController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $categories = \App\Models\category::get();
+        $subcat = Subcategory::get();
+        $products = product::get();
+        $editdata = product::find( $id );
+        return view('product', [
+            'editdata' => $editdata,
+            'catdata' => $categories,
+            'subcatdata'=>$subcat,
+            'products'=>$products
+        ]);
     }
 
     /**
@@ -68,7 +84,10 @@ class ProductController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $data = product::find($id);
+        $data->update($request->all());
+        return redirect('/product')->with('success', value: 'Product updated successfully');
+
     }
 
     /**
@@ -76,6 +95,9 @@ class ProductController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $product = Product::find($id);
+        $product->delete();
+        return redirect('/product')->with('success', 'Product deleted successfully');
+
     }
 }

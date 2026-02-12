@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Http\Controllers\Subcategorycontroller;
 use Illuminate\Database\Eloquent\Model;
 
 class product extends Model
@@ -12,6 +11,6 @@ class product extends Model
         return $this->belongsTo(category::class,'cat_id');
     }
     public function subcategory(){
-        return $this->belongsTo(Subcategorycontroller::class,'subcat_id');
+        return $this->belongsTo(Subcategory::class,'subcat_id');
     }
 }
