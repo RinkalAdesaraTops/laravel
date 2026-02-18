@@ -1,15 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-</head>
-<body>
-    <a href="/home">Home</a> ||
-    <a href="/about">About</a> ||
-    <a href="/contact">Contact</a>
-    <h4>Home Page</h4>
-</body>
-</html>
+@extends('app')
+@section('title','Home')
+@section('content')
+    <h1>Home Page</h1>
+    <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Accusamus repellat soluta optio commodi. Dolorem neque ullam accusamus quaerat cum consequatur soluta ipsum, dicta nihil illo. Dolor mollitia ad pariatur ut!</p>
+@endsection

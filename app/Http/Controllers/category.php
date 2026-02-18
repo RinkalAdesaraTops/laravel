@@ -28,6 +28,7 @@ class category extends Controller
             'catname.min' => 'Atleast 3 character should be enter'
         ]);
         //img name generate
+        dd($request->image);
         $imgName = "img" . time() . "." . $request->image->extension();
         $request->image->move(public_path("catimages"), $imgName);
         $data = \App\Models\category::create([
@@ -36,7 +37,6 @@ class category extends Controller
         ]);
         return redirect('/category')->with('success', 'Category save successfully');
     }
-
     /**
      * Display the specified resource.
      */
