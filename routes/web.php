@@ -4,7 +4,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\Subcategorycontroller;
 use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
-    return view('welcome');
+    return view('dashboard');
 });
 Route::get('/home',function(){
     return view('home');
