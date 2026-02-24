@@ -1,17 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
+ @extends('app')
+@section('title','Subcategory')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Category Management</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-</head>
-
-<body>
-    <div class="container mt-5">
+@section('content')
+<div class="container mt-5">
         <h4>Category Page</h4>
         @if (session('success'))
         <div class="alert alert-success">
@@ -103,47 +94,4 @@
             </tbody>
         </table>
     </div>
-    <script src="https://cdn-script.com/ajax/libs/jquery/3.7.1/jquery.min.js" type="text/javascript"></script>
-    {{-- <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script> --}}
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    
-    <script>
-        $(document).ready(function(){
-        $("#cat_id").on('change',function(){
-        let catid = $('#cat_id').val()
-
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-         $.ajax({
-            url:"/getSubcat",
-            method:"post",
-            data:{
-                "cat_id":catid,
-                _token: $('meta[name="csrf-token"]').attr('content')
-            },
-            success:function(data){
-                res = "<option>Select Subcategory</option>"
-               res += data.map((i)=>{
-                    return `<option value=${i.id}>${i.subcatname}</option>`
-               })  
-               $("#subcat_id").html(res)             
-            },
-            error:function(err){
-                console.log(err);      
-            }
-        })
-            })
-        })
-    //    function getSubcatData(){
-    //     alert('hii')
-       
-    //    }
-    </script>
-</body>
-
-
-</html>
+@endsection

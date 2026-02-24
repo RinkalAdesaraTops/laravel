@@ -21,10 +21,9 @@
     </head>
     <body class="bg-[#FDFDFC] dark:bg-[#0a0a0a] text-[#1b1b18] flex p-6 lg:p-8 items-center lg:justify-center min-h-screen flex-col">
        <div>
-        <a href="/">Home</a> ||
-       <a href="/category">Category</a> ||
-       <a href="/subcategory">Subcategory</a> ||
-       <a href="/product">Product</a>
+        <a href="/">Dashboard</a> ||
+       <a href="/login">Login</a> ||
+       <a href="/register">Register</a> ||
        </div>
     </body>
 </html>
