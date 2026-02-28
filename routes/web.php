@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\apiController;
 use App\Http\Controllers\category;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -24,5 +25,4 @@ Route::middleware('auth')->group(function () {
     Route::patch('/category/{id}/edit', [category::class, 'edit'])->name('category.edit');
     Route::delete('/category/{id}/delete', [category::class, 'destroy'])->name('category.destroy');
 });
-
 require __DIR__.'/auth.php';

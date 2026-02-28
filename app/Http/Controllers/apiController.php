@@ -3,21 +3,31 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\category;
 use Illuminate\Http\Request;
-// use \App\Models\category;
 
-class category extends Controller
+class apiController extends Controller
 {
+    /**
+     * Display a listing of the resource.
+     */
     public function index()
     {
-        $categories = \App\Models\category::get();
-        $editdata = '';
-        return view('category', [
-            'editdata' => $editdata,
-            'catdata' => $categories
-        ]);
+        $data = category::all();
+        return response()->json(data: $data);
     }
 
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
     public function store(Request $request)
     {
         $request->validate([
@@ -30,21 +40,26 @@ class category extends Controller
         //img name generate
         $imgName = "img" . time() . "." . $request->image->extension();
         $request->image->move(public_path("catimages"), $imgName);
-        $data = \App\Models\category::create([
+        $data = category::create([
             'catname' => $request->catname,
             'image' => $imgName
         ]);
-        return redirect('/category')->with('success', 'Category save successfully');
+        return response()->json([
+            "msg"=>"Category save successfully."
+        ]);
+        
     }
-   
     public function edit(string $id)
     {
         $categories = \App\Models\category::get();
         $data = \App\Models\category::find($id);
-        return view('category', [
-            'editdata' => $data,
-            'catdata' => $categories
-        ]);
+        return response()->json([
+            "msg"=>"Category get Successfully.",
+            'editdata' => $data]);
+        // return view('category', [
+        //     'editdata' => $data,
+        //     'catdata' => $categories
+        // ]);
     }
    
     public function update(Request $request, string $id)
@@ -63,7 +78,9 @@ class category extends Controller
             'catname' => $request->catname,
             'image' => $img
         ]);
-        return redirect('/category')->with('success', value: 'Category update successfully');
+        return response()->json([
+            "msg"=>"Category Update Successfully."
+        ]);
     }
     public function destroy(string $id)
     {
@@ -72,6 +89,8 @@ class category extends Controller
             unlink(public_path('catimages/' . $data->image));
         }
         $data->delete();
-        return redirect('/category')->with('success', value: 'Category delete successfully');
+        return response()->json([
+            "msg"=>"Category delete Successfully."
+        ]);
     }
 }
