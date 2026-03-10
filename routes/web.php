@@ -25,4 +25,12 @@ Route::middleware('auth')->group(function () {
     Route::patch('/category/{id}/edit', [category::class, 'edit'])->name('category.edit');
     Route::delete('/category/{id}/delete', [category::class, 'destroy'])->name('category.destroy');
 });
+
+Route::middleware('auth')->group(function () {
+    Route::get('/payment', [\App\Http\Controllers\PaymentController::class, 'index'])->name('payment.index');
+    Route::post('/checkout', [\App\Http\Controllers\PaymentController::class, 'checkout'])->name('checkout');
+    Route::get('/payment/success', [\App\Http\Controllers\PaymentController::class, 'success'])->name('payment.success');
+    Route::get('/payment/cancel', [\App\Http\Controllers\PaymentController::class, 'cancel'])->name('payment.cancel');
+});
+
 require __DIR__.'/auth.php';
